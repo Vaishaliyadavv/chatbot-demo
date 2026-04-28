@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmileCare Dental Clinic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-wrapper {
+      width: 420px;
+      height: 620px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .header-info h2 {
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .header-info p {
+      color: #bfdbfe;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .bot-message {
+      background: #f1f5f9;
+      color: #1e293b;
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+
+    .user-message {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+    }
+
+    .typing {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      background: #f1f5f9;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+      width: fit-content;
+    }
+
+    .typing span {
+      width: 7px;
+      height: 7px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    .chat-input-area {
+      padding: 16px;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 50px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .chat-input-area input:focus {
+      border-color: #2563eb;
+    }
+
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .send-btn:hover { transform: scale(1.08); }
+
+    .send-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+
+    .quick-replies {
+      display: flex;
+      gap: 8px;
+      padding: 0 20px 12px;
+      flex-wrap: wrap;
+    }
+
+    .quick-btn {
+      padding: 6px 14px;
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 50px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .quick-btn:hover {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-wrapper">
+  <div class="chat-header">
+    <div class="avatar">🦷</div>
+    <div class="header-info">
+      <h2>SmileCare Dental Clinic</h2>
+      <p><span class="online-dot"></span>Always here to help</p>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="message bot-message">
+      👋 Hello! Welcome to <strong>SmileCare Dental Clinic</strong>.<br><br>
+      How can I help you today?
+    </div>
+  </div>
+
+  <div class="quick-replies" id="quickReplies">
+    <button class="quick-btn" onclick="sendQuick('What are your timings?')">⏰ Timings</button>
+    <button class="quick-btn" onclick="sendQuick('What services do you offer?')">🦷 Services</button>
+    <button class="quick-btn" onclick="sendQuick('How do I book an appointment?')">📅 Appointment</button>
+    <button class="quick-btn" onclick="sendQuick('Where are you located?')">📍 Location</button>
+  </div>
+
+  <div class="chat-input-area">
+    <input type="text" id="userInput" placeholder="Type your message..." onkeydown="handleKey(event)" />
+    <button class="send-btn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const sessionId = "user_" + Math.random().toString(36).substr(2, 9);
+
+  function handleKey(e) {
+    if (e.key === "Enter") sendMessage();
+  }
+
+  function sendQuick(text) {
+    document.getElementById("userInput").value = text;
+    sendMessage();
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if (!message) return;
+
+    appendMessage(message, "user");
+    input.value = "";
+
+    document.getElementById("quickReplies").style.display = "none";
+
+    const typing = showTyping();
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, session_id: sessionId })
+      });
+
+      const data = await response.json();
+      typing.remove();
+      appendMessage(data.reply, "bot");
+    } catch (err) {
+      typing.remove();
+      appendMessage("Sorry, something went wrong. Please try again!", "bot");
+    }
+  }
+
+  function appendMessage(text, sender) {
+    const box = document.getElementById("chatMessages");
+    const div = document.createElement("div");
+    div.className = "message " + (sender === "user" ? "user-message" : "bot-message");
+    div.innerHTML = text.replace(/\n/g, "<br>");
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function showTyping() {
+    const box = document.getElementById("chatMessages");
+    const div = document.createElement("div");
+    div.className = "typing";
+    div.innerHTML = "<span></span><span></span><span></span>";
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+  }
+</script>
+
+</body>
+</html>
