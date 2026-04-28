@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from groq import Groq
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
